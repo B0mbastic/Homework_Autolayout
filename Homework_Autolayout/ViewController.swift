@@ -45,6 +45,10 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupViews()
+    }
+    
+    private func setupViews() {
         view.addSubview(FirstLabel)
         view.addSubview(SecondLabel)
         view.addSubview(ImageView)
@@ -88,27 +92,19 @@ class ViewController: UIViewController {
         }
         // Do any additional setup after loading the view.
     }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-            super.viewWillTransition(to: size, with: coordinator)
-            coordinator.animate(alongsideTransition: { _ in
-                if size.width > size.height {
-                    // поворачиваем горизонтально и меняем констрейнты
-                    NSLayoutConstraint.deactivate(self.narrowConstraints)
-                    NSLayoutConstraint.activate(self.wideConstraints)
-                } else {
-                    // поворачиваем вертикально и меняем констрейнты
-                    NSLayoutConstraint.deactivate(self.wideConstraints)
-                    NSLayoutConstraint.activate(self.narrowConstraints)
-                }
-                
-                print(size.width)
-                print(size.height)
-                
-            }, completion: {
-                _ in
-                // если надо что-то еще сделать после поворота
-            })
+
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransition(to: newCollection, with: coordinator)
+            let isLandscape = UIDevice.current.orientation.isLandscape
+            if isLandscape {
+                // поворачиваем горизонтально и меняем констрейнты
+                NSLayoutConstraint.deactivate(self.narrowConstraints)
+                NSLayoutConstraint.activate(self.wideConstraints)
+            } else {
+                // поворачиваем вертикально и меняем констрейнты
+                NSLayoutConstraint.deactivate(self.wideConstraints)
+                NSLayoutConstraint.activate(self.narrowConstraints)
+            }
         }
 }
 
